@@ -1,0 +1,15 @@
+services:
+  spend-agent:
+    build: .
+    image: spend-insight-agent:latest
+    ports:
+      - "8000:8000"
+    environment:
+      # Defaults to offline mode. To use a live model, set these:
+      # LLM_PROVIDER: openai
+      # OPENAI_API_KEY: ${OPENAI_API_KEY}
+      # OPENAI_MODEL: gpt-4o-mini
+      LLM_PROVIDER: offline
+    volumes:
+      # Persist traces to the host for inspection
+      - ./traces:/app/traces

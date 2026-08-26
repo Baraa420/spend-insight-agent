@@ -1,0 +1,25 @@
+date,category,vendor,amount_eur,cost_center,po_number
+2025-01-08,Travel,SkyWays Air,1200.00,CC-100,PO-0001
+2025-01-15,Software,CloudCore,4200.00,CC-200,PO-0002
+2025-01-22,Consulting,BrightAdvisory,15000.00,CC-300,PO-0003
+2025-01-27,Hardware,CompuParts,3100.00,CC-200,PO-0004
+2025-02-05,Travel,SkyWays Air,980.00,CC-100,PO-0005
+2025-02-11,Marketing,AdReach,5400.00,CC-400,PO-0006
+2025-02-18,Software,CloudCore,4200.00,CC-200,PO-0007
+2025-02-24,Training,LearnHub,2200.00,CC-300,PO-0008
+2025-03-03,Travel,SkyWays Air,1350.00,CC-100,PO-0009
+2025-03-09,Consulting,BrightAdvisory,18000.00,CC-300,PO-0010
+2025-03-16,Facilities,OfficePlus,2600.00,CC-500,PO-0011
+2025-03-23,Software,CloudCore,4200.00,CC-200,PO-0012
+2025-04-04,Travel,GlobeTrek Travel,11800.00,CC-100,PO-0013
+2025-04-12,Hardware,CompuParts,3300.00,CC-200,PO-0014
+2025-04-19,Marketing,AdReach,5600.00,CC-400,PO-0015
+2025-04-25,Software,CloudCore,4200.00,CC-200,PO-0016
+2025-05-06,Travel,SkyWays Air,1150.00,CC-100,PO-0017
+2025-05-13,Consulting,BrightAdvisory,16500.00,CC-300,PO-0018
+2025-05-20,Training,LearnHub,2400.00,CC-300,PO-0019
+2025-05-28,Software,CloudCore,4200.00,CC-200,PO-0020
+2025-06-04,Travel,SkyWays Air,1250.00,CC-100,PO-0021
+2025-06-11,Hardware,CompuParts,3050.00,CC-200,PO-0022
+2025-06-18,Marketing,AdReach,5300.00,CC-400,PO-0023
+2025-06-24,Facilities,OfficePlus,2700.00,CC-500,PO-0024

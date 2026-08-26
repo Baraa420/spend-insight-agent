@@ -1,0 +1,21 @@
+# Runtime dependencies (pinned-ish for reproducibility; see pyproject.toml for source of truth)
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2.6
+pydantic-settings>=2.2
+python-dotenv>=1.0
+langgraph>=0.2.0
+langchain-core>=0.3.0
+scikit-learn>=1.3
+pandas>=2.0
+numpy>=1.24
+httpx>=0.27
+
+# Dev / test
+pytest>=8.0
+pytest-cov>=4.1
+ruff>=0.4
+
+# Optional integrations (uncomment to enable live LLM / tracing):
+# openai>=1.30
+# langfuse>=2.0
