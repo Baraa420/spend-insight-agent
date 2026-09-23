@@ -24,6 +24,16 @@ _CATEGORIES = [
     "Training",
 ]
 _QUARTER_RE = re.compile(r"\bq([1-4])\b", re.IGNORECASE)
+_ISO_MONTH_RE = re.compile(r"\b(\d{4})-(\d{2})\b")
+_MONTH_NAMES = {
+    "january": 1, "february": 2, "march": 3, "april": 4, "may": 5, "june": 6,
+    "july": 7, "august": 8, "september": 9, "october": 10, "november": 11, "december": 12,
+}
+_MONTH_NAME_RE = re.compile(
+    r"\b(january|february|march|april|may|june|july|august|september|october|november|december)\b",
+    re.IGNORECASE,
+)
+_YEAR_RE = re.compile(r"\b(20\d{2})\b")
 
 
 class OfflineLLM(BaseLLM):
@@ -80,10 +90,27 @@ class OfflineLLM(BaseLLM):
             if cat.lower() in q:
                 args["category"] = cat
                 break
-        qm = _QUARTER_RE.search(q)
-        if qm:
-            args["quarter"] = int(qm.group(1))
+
+        # Month has priority over quarter (more specific). Accept "YYYY-MM" or a
+        # month name combined with a 4-digit year (e.g. "February 2025").
+        month = self._extract_month(q)
+        if month:
+            args["month"] = month
+        else:
+            qm = _QUARTER_RE.search(q)
+            if qm:
+                args["quarter"] = int(qm.group(1))
         return args
+
+    def _extract_month(self, q: str) -> str | None:
+        iso = _ISO_MONTH_RE.search(q)
+        if iso:
+            return f"{iso.group(1)}-{iso.group(2)}"
+        name = _MONTH_NAME_RE.search(q)
+        year = _YEAR_RE.search(q)
+        if name and year:
+            return f"{year.group(1)}-{_MONTH_NAMES[name.group(1).lower()]:02d}"
+        return None
 
     # ---- synthesis ----------------------------------------------------------
     def synthesize(self, question: str, tool_outputs: list[dict[str, Any]]) -> str:
@@ -107,7 +134,9 @@ class OfflineLLM(BaseLLM):
             scope = []
             if result.get("category"):
                 scope.append(f"category '{result['category']}'")
-            if result.get("quarter"):
+            if result.get("month"):
+                scope.append(f"{result['month']}")
+            elif result.get("quarter"):
                 scope.append(f"Q{result['quarter']}")
             scope_txt = (" for " + " in ".join(scope)) if scope else ""
             return f"Total spend{scope_txt} is {result.get('total_eur')} EUR across {result.get('count')} transactions."

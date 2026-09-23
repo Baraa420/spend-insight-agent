@@ -22,8 +22,8 @@ class SpendAnalyticsTool(BaseTool):
     name = "spend_analytics"
     description = (
         "Analyze the spend transactions dataset. operation in [total, top_n, anomalies]. "
-        "Optional filters: category, quarter (1-4). For top_n: by in [category, vendor], n. "
-        "Returns numeric results suitable for grounding a final answer."
+        "Optional filters: category, quarter (1-4), month (YYYY-MM). For top_n: by in "
+        "[category, vendor], n. Returns numeric results suitable for grounding a final answer."
     )
 
     def __init__(self, csv_path: str | Path) -> None:
@@ -39,7 +39,9 @@ class SpendAnalyticsTool(BaseTool):
     def run(self, operation: str = "total", **kwargs: Any) -> dict[str, Any]:
         op = (operation or "total").lower()
         if op == "total":
-            return self._total(kwargs.get("category"), kwargs.get("quarter"))
+            return self._total(
+                kwargs.get("category"), kwargs.get("quarter"), kwargs.get("month")
+            )
         if op == "top_n":
             return self._top_n(kwargs.get("by", "category"), int(kwargs.get("n", 3)))
         if op == "anomalies":
@@ -47,16 +49,21 @@ class SpendAnalyticsTool(BaseTool):
         return {"operation": op, "error": f"unknown operation '{op}'"}
 
     # ---- operations ---------------------------------------------------------
-    def _total(self, category: str | None, quarter: int | None) -> dict[str, Any]:
+    def _total(
+        self, category: str | None, quarter: int | None, month: str | None = None
+    ) -> dict[str, Any]:
         df = self._df
         if category:
             df = df[df["category"].str.lower() == str(category).lower()]
         if quarter:
             df = df[df["quarter"] == int(quarter)]
+        if month:
+            df = df[df["month"] == str(month)]
         return {
             "operation": "total",
             "category": category,
             "quarter": quarter,
+            "month": month,
             "total_eur": round(float(df["amount_eur"].sum()), 2),
             "count": int(len(df)),
         }

@@ -43,6 +43,22 @@ def test_spend_total_by_category():
     assert out["count"] >= 6
 
 
+def test_spend_total_by_month():
+    tool = SpendAnalyticsTool(DATA / "spend_transactions.csv")
+    out = tool.run(operation="total", category="Travel", month="2025-02")
+    # Only the February Travel transaction (980.00) should be counted.
+    assert out["month"] == "2025-02"
+    assert out["count"] == 1
+    assert out["total_eur"] == 980.00
+
+
+def test_spend_month_differs_from_year_total():
+    tool = SpendAnalyticsTool(DATA / "spend_transactions.csv")
+    year = tool.run(operation="total", category="Travel")
+    month = tool.run(operation="total", category="Travel", month="2025-01")
+    assert month["total_eur"] < year["total_eur"]
+
+
 def test_spend_top_n_vendor():
     tool = SpendAnalyticsTool(DATA / "spend_transactions.csv")
     out = tool.run(operation="top_n", by="vendor", n=3)

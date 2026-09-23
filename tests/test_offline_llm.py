@@ -15,6 +15,21 @@ def test_offline_routes_to_analytics_for_spend_question():
     assert step.args.get("quarter") == 1
 
 
+def test_offline_parses_iso_month():
+    llm = OfflineLLM()
+    plan = llm.plan("How much did we spend on Travel in 2025-02?", tools=[])
+    step = next(s for s in plan.steps if s.tool == "spend_analytics")
+    assert step.args.get("month") == "2025-02"
+    assert "quarter" not in step.args  # month takes priority
+
+
+def test_offline_parses_month_name_with_year():
+    llm = OfflineLLM()
+    plan = llm.plan("How much did we spend on Travel in February 2025?", tools=[])
+    step = next(s for s in plan.steps if s.tool == "spend_analytics")
+    assert step.args.get("month") == "2025-02"
+
+
 def test_offline_routes_to_policy_for_policy_question():
     llm = OfflineLLM()
     plan = llm.plan("What is the purchase order approval limit?", tools=[])
